@@ -276,13 +276,6 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
         }
         return false
     }
-    
-    public override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        guard gestureRecognizer == panGestureRecognizer else {
-            return true
-        }
-        return delegate?.card(cardShouldDrag: self) ?? true
-    }
 
     public override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         guard gestureRecognizer == panGestureRecognizer else {
