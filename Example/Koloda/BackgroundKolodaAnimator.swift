@@ -8,28 +8,22 @@
 
 import Foundation
 import Koloda
-import pop
 
 class BackgroundKolodaAnimator: KolodaViewAnimator {
     
     override func applyScaleAnimation(_ card: DraggableCardView, scale: CGSize, frame: CGRect, duration: TimeInterval, completion: AnimationCompletionBlock) {
-        
-        let scaleAnimation = POPSpringAnimation(propertyNamed: kPOPLayerScaleXY)
-        scaleAnimation?.springBounciness = 9
-        scaleAnimation?.springSpeed = 16
-        scaleAnimation?.toValue = NSValue(cgSize: scale)
-        card.layer.pop_add(scaleAnimation, forKey: "scaleAnimation")
-        
-        let frameAnimation = POPSpringAnimation(propertyNamed: kPOPViewFrame)
-        frameAnimation?.springBounciness = 9
-        frameAnimation?.springSpeed = 16
-        frameAnimation?.toValue = NSValue(cgRect: frame)
+
+        let animator = UIViewPropertyAnimator(duration: duration, dampingRatio: 0.7) {
+            card.transform = .init(scaleX: scale.width, y: scale.height)
+            card.frame = frame
+        }
+
         if let completion = completion {
-            frameAnimation?.completionBlock = { _, finished in
-                completion(finished)
+            animator.addCompletion { position in
+                completion(position == .end)
             }
         }
-        card.pop_add(frameAnimation, forKey: "frameAnimation")
+        animator.startAnimation()
     }
     
 }
